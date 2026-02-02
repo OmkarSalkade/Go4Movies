@@ -1,7 +1,7 @@
-# BookMyTicket
+# Go4Movies
 Project as Part of the Software Engineering Course Submission Requirements
 
-GoMovies is a web-based movie ticket booking platform designed to simulate a real-world, high-traffic e-commerce environment. The application allows users to browse movies, check showtimes, and book specific seats in an interactive theater map.
+Go4Movies is a web-based movie ticket booking platform designed to simulate a real-world, high-traffic e-commerce environment. The application allows users to browse movies, check showtimes, and book specific seats in an interactive theater map.
 
 Core Problem Solved: The primary technical challenge this project solves is the "Race Condition" inherent in booking systems—where multiple users attempt to book the exact same seat at the same millisecond. GoMovies prevents double-booking errors through a robust concurrency control strategy.
 
