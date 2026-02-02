@@ -24,7 +24,7 @@ Cleanup: A background Goroutine runs periodically to expire unpaid reservations,
 DevOps (Docker): The application is fully containerized. A single docker-compose.yml orchestrates the React frontend (served via Nginx or Vite preview) and the Go binary, ensuring the environment is identical for all developers.
 
 # Members 
-Harsh Soni - FrontEnd
-Paresh Devlekar - FrontEnd
-Omkar Salkade - BackEnd
-Paras Mittal - BackEnd
+Harsh Soni - FrontEnd \
+Paresh Devlekar - FrontEnd \
+Omkar Salkade - BackEnd \
+Paras Mittal - BackEnd 
