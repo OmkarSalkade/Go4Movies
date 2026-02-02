@@ -1,5 +1,5 @@
 # Go4Movies
-Project as Part of the Software Engineering Course Submission Requirements
+Project Name - Go4Movies 
 
 Go4Movies is a web-based movie ticket booking platform designed to simulate a real-world, high-traffic e-commerce environment. The application allows users to browse movies, check showtimes, and book specific seats in an interactive theater map.
 
@@ -22,3 +22,9 @@ Conflict Resolution: If User B tries to book the seat while User A holds the loc
 Cleanup: A background Goroutine runs periodically to expire unpaid reservations, releasing seats back to the pool.
 
 DevOps (Docker): The application is fully containerized. A single docker-compose.yml orchestrates the React frontend (served via Nginx or Vite preview) and the Go binary, ensuring the environment is identical for all developers.
+
+# Members 
+Harsh Soni - FrontEnd
+Paresh Devlekar - FrontEnd
+Omkar Salkade - BackEnd
+Paras Mittal - BackEnd
