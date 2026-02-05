@@ -11,7 +11,7 @@
 # Test binary, built with `go test -c`
 *.test
 
-# Code coverage profiles and other test artifacts
+# Output of the go coverage tool
 *.out
 coverage.*
 *.coverprofile
@@ -24,11 +24,23 @@ profile.cov
 go.work
 go.work.sum
 
-# env file
+# Compiled binaries
+/bin/
+/dist/
+/backend/bin/
+/backend/dist/
+
+# Environment files
 .env
+.env.local
+.env.*.local
 
 # Editor/IDE
 # .idea/
 # .vscode/
 .zencoder
 .zenflow
+
+# OS-specific files
+.DS_Store
+Thumbs.db
