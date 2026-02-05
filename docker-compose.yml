@@ -11,3 +11,14 @@ services:
       - /app/.next
     environment:
       - NODE_ENV=development
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./backend:/app
+    environment:
+      - CGO_ENABLED=0
