@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { SearchBar } from "@/components/search-bar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,6 +28,16 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <header className="bg-white shadow-sm border-b">
+          <div className="container mx-auto px-4 py-4">
+            <div className="flex items-center justify-between">
+              <h1 className="text-xl font-bold">Go4Movies</h1>
+              <div className="flex-1 max-w-md mx-4">
+                <SearchBar />
+              </div>
+            </div>
+          </div>
+        </header>
         {children}
       </body>
     </html>
