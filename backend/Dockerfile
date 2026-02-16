@@ -1,5 +1,8 @@
 # Use the official Go image
-FROM golang:1.22-alpine
+FROM golang:1.26.0-alpine
+
+# Install C compiler for CGO (required by gorm.io/driver/sqlite)
+RUN apk add --no-cache gcc musl-dev
 
 # Set the working directory
 WORKDIR /app
@@ -13,8 +16,11 @@ RUN go mod download
 # Copy the rest of the application code
 COPY . .
 
+# Create data directory for SQLite
+RUN mkdir -p /app/data
+
 # Expose the port the app runs on
 EXPOSE 8080
 
 # Run the application
-CMD ["go", "run", "server.go"]
+CMD ["go", "run", "main.go"]
