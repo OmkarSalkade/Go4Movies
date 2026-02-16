@@ -4,36 +4,16 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 
 interface Movie {
-  id: string
+  id: number
   title: string
-  poster: string
   description: string
+  poster_url: string
 }
-
-const mockMovies: Movie[] = [
-  {
-    id: "1",
-    title: "The Dark Knight",
-    poster: "/movie1.jpg",
-    description: "A superhero action film."
-  },
-  {
-    id: "2",
-    title: "Inception",
-    poster: "/movie2.jpg",
-    description: "A mind-bending thriller."
-  },
-  {
-    id: "3",
-    title: "Interstellar",
-    poster: "/movie3.jpg",
-    description: "A space exploration epic."
-  }
-]
 
 export default function MoviesPage() {
   const [movies, setMovies] = useState<Movie[]>([])
   const [zipCode, setZipCode] = useState("")
+  const [loading, setLoading] = useState(true)
   const router = useRouter()
 
   useEffect(() => {
@@ -43,12 +23,25 @@ export default function MoviesPage() {
       return
     }
     setZipCode(selectedZip)
-    // In real app, fetch movies by zip code from backend
-    setMovies(mockMovies)
+    // Fetch movies from API
+    fetch(`http://localhost:8080/api/v1/movies?zipcode=${selectedZip}`)
+      .then(response => response.json())
+      .then(data => {
+        setMovies(data)
+        setLoading(false)
+      })
+      .catch(error => {
+        console.error('Error fetching movies:', error)
+        setLoading(false)
+      })
   }, [router])
 
-  const handleMovieClick = (movieId: string) => {
+  const handleMovieClick = (movieId: number) => {
     router.push(`/movies/${movieId}`)
+  }
+
+  if (loading) {
+    return <div className="container mx-auto p-4">Loading movies...</div>
   }
 
   return (
@@ -61,7 +54,7 @@ export default function MoviesPage() {
             onClick={() => handleMovieClick(movie.id)}
             className="cursor-pointer border rounded-lg p-4 hover:shadow-lg transition-shadow"
           >
-            <img src={movie.poster} alt={movie.title} className="w-full h-48 object-cover rounded" />
+            <img src={movie.poster_url} alt={movie.title} className="w-full h-48 object-cover rounded" />
             <h2 className="text-lg font-semibold mt-2">{movie.title}</h2>
             <p className="text-sm text-gray-600">{movie.description}</p>
           </div>
