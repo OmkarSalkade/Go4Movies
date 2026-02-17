@@ -1,26 +1,49 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* Brand */
+  --color-primary: #ea2a33;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Backgrounds */
+  --color-background: #121212;
+  --color-foreground: #ffffff;
+  --color-surface-dark: #1E1E1E;
+  --color-surface-dark-hover: #2C2C2C;
+
+  /* Cinema-warm neutrals */
+  --color-neutral-50: #fdfafa;
+  --color-neutral-100: #fcf5f5;
+  --color-neutral-200: #f8ebeb;
+  --color-neutral-300: #f0dcdc;
+  --color-neutral-400: #a0a0a0;
+  --color-neutral-500: #c88a8c;
+  --color-neutral-600: #a86466;
+  --color-neutral-700: #404040;
+  --color-neutral-800: #2a2a2a;
+  --color-neutral-900: #121212;
+
+  /* Typography */
+  --font-display: 'Spline Sans', sans-serif;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-display);
+}
+
+/* Modal entrance animation */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.3s ease-out;
 }
