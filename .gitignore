@@ -48,3 +48,4 @@ Thumbs.db
 # SQLite WAL/SHM files
 backend/data/*.db-shm
 backend/data/*.db-wal
+backend/data/*.db
