@@ -40,7 +40,6 @@ func Connect(dbPath string) {
 func Migrate() {
     err := DB.AutoMigrate(
         &models.User{},
-        &models.RefreshToken{},
         &models.Location{},
         &models.Movie{},
         &models.Theater{},
