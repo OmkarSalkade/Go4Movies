@@ -1,18 +1,39 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { loginUser } from "@/lib/api"
 
 export function LoginForm() {
+  const router = useRouter()
   const [showPassword, setShowPassword] = useState<boolean>(false)
+  const [email, setEmail] = useState<string>("")
+  const [password, setPassword] = useState<string>("")
+  const [errorMessage, setErrorMessage] = useState<string>("")
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const form = e.currentTarget
-    const email = (form.elements.namedItem("email") as HTMLInputElement).value
-    const password = (form.elements.namedItem("password") as HTMLInputElement).value
-    
-  } 
-  
+    setErrorMessage("")
+
+    if (!email.trim() || !password) {
+      setErrorMessage("Email and password are required")
+      return
+    }
+
+    try {
+      setIsSubmitting(true)
+      await loginUser({
+        email: email.trim(),
+        password,
+      })
+      router.push("/")
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : "Failed to login")
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
@@ -35,9 +56,13 @@ export function LoginForm() {
           </svg>
           <input
             id="email"
+            name="email"
             type="email"
             placeholder="you@example.com"
             className="w-full h-12 pl-10 pr-4 rounded-xl border border-border bg-card text-foreground text-sm placeholder:text-muted-foreground/60 outline-none focus:ring-2 focus:ring-ring/40 focus:border-primary transition-all"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            required
           />
         </div>
       </div>
@@ -61,9 +86,13 @@ export function LoginForm() {
           </svg>
           <input
             id="password"
+            name="password"
             type={showPassword ? "text" : "password"}
             placeholder="Enter your password"
             className="w-full h-12 pl-10 pr-10 rounded-xl border border-border bg-card text-foreground text-sm placeholder:text-muted-foreground/60 outline-none focus:ring-2 focus:ring-ring/40 focus:border-primary transition-all"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            required
           />
           <button
             type="button"
@@ -103,10 +132,17 @@ export function LoginForm() {
       {/* Submit */}
       <button
         type="submit"
+        disabled={isSubmitting}
         className="h-12 rounded-xl bg-primary text-primary-foreground text-sm font-medium tracking-wide shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 hover:brightness-110 active:scale-[0.98] transition-all mt-1"
       >
-        Sign In
+        {isSubmitting ? "Signing in..." : "Sign In"}
       </button>
+
+      {errorMessage ? (
+        <p className="text-sm text-destructive" role="alert" aria-live="polite">
+          {errorMessage}
+        </p>
+      ) : null}
 
       {/* Divider */}
       <div className="relative flex items-center justify-center my-1">

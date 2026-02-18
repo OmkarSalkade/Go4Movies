@@ -1,23 +1,59 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { registerUser } from "@/lib/api"
 
 export function SignUpForm() {
+  const router = useRouter()
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false)
+  const [fullName, setFullName] = useState<string>("")
+  const [username, setUsername] = useState<string>("")
+  const [email, setEmail] = useState<string>("")
+  const [password, setPassword] = useState<string>("")
+  const [confirmPassword, setConfirmPassword] = useState<string>("")
+  const [errorMessage, setErrorMessage] = useState<string>("")
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const form = e.currentTarget
-    const fullName = (form.elements.namedItem("fullName") as HTMLInputElement).value
-    const email = (form.elements.namedItem("email") as HTMLInputElement).value
-    const password = (form.elements.namedItem("password") as HTMLInputElement).value
-    const confirmPassword = (form.elements.namedItem("confirmPassword") as HTMLInputElement).value
+    setErrorMessage("")
 
-    void fullName
-    void email
-    void password
-    void confirmPassword
+    if (!fullName.trim()) {
+      setErrorMessage("Full name is required")
+      return
+    }
+
+    if (username.trim().length < 3) {
+      setErrorMessage("Username must be at least 3 characters")
+      return
+    }
+
+    if (password.length < 6) {
+      setErrorMessage("Password must be at least 6 characters")
+      return
+    }
+
+    if (password !== confirmPassword) {
+      setErrorMessage("Passwords do not match")
+      return
+    }
+
+    try {
+      setIsSubmitting(true)
+      await registerUser({
+        email: email.trim(),
+        username: username.trim(),
+        password,
+        full_name: fullName.trim(),
+      })
+      router.push("/login")
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : "Failed to create account")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -44,6 +80,38 @@ export function SignUpForm() {
             type="text"
             placeholder="John Doe"
             className="w-full h-12 pl-10 pr-4 rounded-xl border border-border bg-card text-foreground text-sm placeholder:text-muted-foreground/60 outline-none focus:ring-2 focus:ring-ring/40 focus:border-primary transition-all"
+            value={fullName}
+            onChange={(event) => setFullName(event.target.value)}
+            required
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor="username" className="text-sm font-medium text-foreground">
+          Username
+        </label>
+        <div className="relative">
+          <svg
+            className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            aria-hidden="true"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+          </svg>
+          <input
+            id="username"
+            name="username"
+            type="text"
+            placeholder="john_doe"
+            className="w-full h-12 pl-10 pr-4 rounded-xl border border-border bg-card text-foreground text-sm placeholder:text-muted-foreground/60 outline-none focus:ring-2 focus:ring-ring/40 focus:border-primary transition-all"
+            value={username}
+            onChange={(event) => setUsername(event.target.value)}
+            minLength={3}
             required
           />
         </div>
@@ -71,6 +139,8 @@ export function SignUpForm() {
             type="email"
             placeholder="you@example.com"
             className="w-full h-12 pl-10 pr-4 rounded-xl border border-border bg-card text-foreground text-sm placeholder:text-muted-foreground/60 outline-none focus:ring-2 focus:ring-ring/40 focus:border-primary transition-all"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
             required
           />
         </div>
@@ -98,6 +168,9 @@ export function SignUpForm() {
             type={showPassword ? "text" : "password"}
             placeholder="Create a password"
             className="w-full h-12 pl-10 pr-10 rounded-xl border border-border bg-card text-foreground text-sm placeholder:text-muted-foreground/60 outline-none focus:ring-2 focus:ring-ring/40 focus:border-primary transition-all"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            minLength={6}
             required
           />
           <button
@@ -142,6 +215,8 @@ export function SignUpForm() {
             type={showConfirmPassword ? "text" : "password"}
             placeholder="Confirm your password"
             className="w-full h-12 pl-10 pr-10 rounded-xl border border-border bg-card text-foreground text-sm placeholder:text-muted-foreground/60 outline-none focus:ring-2 focus:ring-ring/40 focus:border-primary transition-all"
+            value={confirmPassword}
+            onChange={(event) => setConfirmPassword(event.target.value)}
             required
           />
           <button
@@ -179,10 +254,17 @@ export function SignUpForm() {
 
       <button
         type="submit"
+        disabled={isSubmitting}
         className="h-12 rounded-xl bg-primary text-primary-foreground text-sm font-medium tracking-wide shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 hover:brightness-110 active:scale-[0.98] transition-all mt-1"
       >
-        Create Account
+        {isSubmitting ? "Creating account..." : "Create Account"}
       </button>
+
+      {errorMessage ? (
+        <p className="text-sm text-destructive" role="alert" aria-live="polite">
+          {errorMessage}
+        </p>
+      ) : null}
 
       <div className="relative flex items-center justify-center my-1">
         <div className="absolute inset-0 flex items-center" aria-hidden="true">

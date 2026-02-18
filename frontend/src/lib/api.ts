@@ -1,9 +1,29 @@
 // API client for backend communication
 // Centralizes all fetch calls so endpoints and error handling live in one place.
 
-import { Movie, Location } from "./types"
+import {
+  AuthSuccessResponse,
+  Location,
+  LoginPayload,
+  Movie,
+  RegisterPayload,
+} from "./types"
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"
+
+async function parseResponse<T>(response: Response, fallbackMessage: string): Promise<T> {
+  const data = await response.json().catch(() => null)
+
+  if (!response.ok) {
+    const message =
+      data && typeof data === "object" && "error" in data && typeof data.error === "string"
+        ? data.error
+        : fallbackMessage
+    throw new Error(message)
+  }
+
+  return data as T
+}
 
 /**
  * Fetch all locations (zip codes) from the backend.
@@ -39,4 +59,30 @@ export async function fetchMovieById(movieId: string): Promise<Movie> {
     throw new Error("Movie not found")
   }
   return response.json()
+}
+
+export async function registerUser(payload: RegisterPayload): Promise<AuthSuccessResponse> {
+  const response = await fetch(`${API_BASE_URL}/api/v1/auth/register`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify(payload),
+  })
+
+  return parseResponse<AuthSuccessResponse>(response, "Failed to register user")
+}
+
+export async function loginUser(payload: LoginPayload): Promise<AuthSuccessResponse> {
+  const response = await fetch(`${API_BASE_URL}/api/v1/auth/login`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify(payload),
+  })
+
+  return parseResponse<AuthSuccessResponse>(response, "Failed to login")
 }
