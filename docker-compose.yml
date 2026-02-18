@@ -21,4 +21,4 @@ services:
     volumes:
       - ./backend:/app
     environment:
-      - CGO_ENABLED=0
+      - CGO_ENABLED=1
