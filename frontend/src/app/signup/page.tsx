@@ -1,10 +1,9 @@
 import Image from "next/image"
-import { LoginForm } from "@/components/auth/login-form"
+import { SignUpForm } from "@/components/auth/signup-form"
 
-export default function LoginPage() {
+export default function SignUpPage() {
   return (
     <div className="min-h-screen flex bg-background">
-      {/* Left: Cinema Image Panel */}
       <div className="hidden lg:flex lg:w-1/2 xl:w-3/5 relative overflow-hidden">
         <Image
           src="/movie-login.png"
@@ -18,19 +17,17 @@ export default function LoginPage() {
         <div className="absolute inset-0 flex flex-col justify-end p-12 xl:p-16">
           <blockquote className="max-w-lg">
             <p className="text-lg xl:text-xl text-card/90 leading-relaxed italic font-serif text-white">
-              {'"A good film is when the price of the dinner, the theatre admission and the babysitter were all worth it."'}
+              {'"Cinema is a matter of what\'s in the frame and what\'s out."'}
             </p>
             <footer className="mt-3 text-sm text-card/70 tracking-wide">
-              {"— Alfred Hitchcock"}
+              {"— Martin Scorsese"}
             </footer>
           </blockquote>
         </div>
       </div>
 
-      {/* Right: Login Form Panel */}
       <div className="flex-1 flex flex-col justify-center px-6 py-12 sm:px-12 lg:px-16 xl:px-20">
         <div className="mx-auto w-full max-w-sm">
-          {/* Logo */}
           <div className="flex items-center gap-3 mb-12">
             <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary">
               <svg className="h-5 w-5 text-primary-foreground" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" aria-hidden="true">
@@ -42,24 +39,21 @@ export default function LoginPage() {
             </span>
           </div>
 
-          {/* Heading */}
           <div className="mb-8">
             <h1 className="text-3xl font-serif font-semibold tracking-tight text-foreground text-balance">
-              Welcome back
+              Create your account
             </h1>
             <p className="mt-2 text-muted-foreground leading-relaxed">
-              Sign in to book your next movie night
+              Join Go4Movies and start booking your favorite shows
             </p>
           </div>
 
-          {/* Form */}
-          <LoginForm />
+          <SignUpForm />
 
-          {/* Footer */}
           <p className="mt-8 text-center text-sm text-muted-foreground">
-            {"Don't have an account? "}
-            <a href="/signup" className="text-primary hover:opacity-80 font-medium transition-opacity">
-              Create one
+            {"Already have an account? "}
+            <a href="/login" className="text-primary hover:opacity-80 font-medium transition-opacity">
+              Sign in
             </a>
           </p>
         </div>
