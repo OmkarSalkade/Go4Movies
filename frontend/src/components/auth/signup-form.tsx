@@ -3,9 +3,11 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { registerUser } from "@/lib/api"
+import { useAuth } from "@/context/auth-context"
 
 export function SignUpForm() {
   const router = useRouter()
+  const { login: authLogin } = useAuth()
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false)
   const [fullName, setFullName] = useState<string>("")
@@ -42,13 +44,14 @@ export function SignUpForm() {
 
     try {
       setIsSubmitting(true)
-      await registerUser({
+      const response = await registerUser({
         email: email.trim(),
         username: username.trim(),
         password,
         full_name: fullName.trim(),
       })
-      router.push("/login")
+      authLogin(response.user)
+      router.push("/")
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : "Failed to create account")
     } finally {
@@ -266,16 +269,16 @@ export function SignUpForm() {
         </p>
       ) : null}
 
-      <div className="relative flex items-center justify-center my-1">
+      {/* <div className="relative flex items-center justify-center my-1">
         <div className="absolute inset-0 flex items-center" aria-hidden="true">
           <div className="w-full border-t border-border" />
         </div>
         <span className="relative bg-background px-4 text-xs text-muted-foreground uppercase tracking-widest">
           or sign up with
         </span>
-      </div>
+      </div> */}
 
-      <div className="grid grid-cols-2 gap-3">
+      {/* <div className="grid grid-cols-2 gap-3">
         <button
           type="button"
           className="flex items-center justify-center gap-2 h-11 rounded-xl border border-border bg-card text-foreground text-sm font-medium hover:bg-secondary transition-colors"
@@ -297,7 +300,7 @@ export function SignUpForm() {
           </svg>
           Apple
         </button>
-      </div>
+      </div> */}
     </form>
   )
 }
