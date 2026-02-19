@@ -8,6 +8,7 @@ import { useZipCode } from "@/hooks/useZipCode"
 import { MovieGrid } from "@/components/movies/movie-grid"
 import { ZipCodeModal } from "@/components/ui/zip-code-modal"
 import { useAuth } from "@/context/auth-context"
+import { useMovies } from "@/context/movies-context"
 
 const DEFAULT_ZIP_CODE = "32601"
 
@@ -19,6 +20,7 @@ export default function MoviesPage() {
   const router = useRouter()
   const { getZipCode, setZipCode } = useZipCode()
   const { location, setLocation } = useAuth()
+  const { setMovies: setContextMovies } = useMovies()
 
 
   const loadMovies = useCallback((zip: string) => {
@@ -26,13 +28,14 @@ export default function MoviesPage() {
     fetchMoviesByZipCode(zip)
       .then((data) => {
         setMovies(data)
+        setContextMovies(data)
         setLoading(false)
       })
       .catch((error) => {
         console.error("Error fetching movies:", error)
         setLoading(false)
       })
-  }, [])
+  }, [setContextMovies])
 
   useEffect(() => {
     const storedZip = getZipCode()

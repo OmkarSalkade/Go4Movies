@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { AuthProvider } from "@/context/auth-context";
+import { MoviesProvider } from "@/context/movies-context";
 import { Header } from "@/components/layout/header";
 
 export const metadata: Metadata = {
@@ -27,8 +28,10 @@ export default function RootLayout({
       </head>
       <body className="font-display antialiased">
         <AuthProvider>
-          <Header />
-          {children}
+          <MoviesProvider>
+            <Header />
+            {children}
+          </MoviesProvider>
         </AuthProvider>
       </body>
     </html>
