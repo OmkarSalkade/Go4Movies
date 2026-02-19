@@ -1,5 +1,6 @@
 import Image from "next/image"
 import { LoginForm } from "@/components/auth/login-form"
+import Link from "next/link"
 
 export default function LoginPage() {
   return (
@@ -58,9 +59,9 @@ export default function LoginPage() {
           {/* Footer */}
           <p className="mt-8 text-center text-sm text-muted-foreground">
             {"Don't have an account? "}
-            <a href="/signup" className="text-primary hover:opacity-80 font-medium transition-opacity">
+            <Link href="/signup" className="text-primary hover:opacity-80 font-medium transition-opacity">
               Create one
-            </a>
+            </Link>
           </p>
         </div>
       </div>

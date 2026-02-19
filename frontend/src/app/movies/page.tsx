@@ -2,11 +2,12 @@
 
 import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
-import { Movie } from "@/lib/types"
+import { Movie, Location } from "@/lib/types"
 import { fetchMoviesByZipCode } from "@/lib/api"
 import { useZipCode } from "@/hooks/useZipCode"
 import { MovieGrid } from "@/components/movies/movie-grid"
 import { ZipCodeModal } from "@/components/ui/zip-code-modal"
+import { useAuth } from "@/context/auth-context"
 
 const DEFAULT_ZIP_CODE = "32601"
 
@@ -17,6 +18,8 @@ export default function MoviesPage() {
   const [showModal, setShowModal] = useState(false)
   const router = useRouter()
   const { getZipCode, setZipCode } = useZipCode()
+  const { location, setLocation } = useAuth()
+
 
   const loadMovies = useCallback((zip: string) => {
     setLoading(true)
@@ -44,11 +47,12 @@ export default function MoviesPage() {
     }
   }, [getZipCode, loadMovies])
 
-  const handleSelectZipCode = (zip: string) => {
-    setZipCode(zip)
-    setZipCodeState(zip)
+  const handleSelectLocation = (loc: Location) => {
+    setZipCode(loc.zipcode)
+    setZipCodeState(loc.zipcode)
+    setLocation({ city: loc.city, zipcode: loc.zipcode })
     setShowModal(false)
-    loadMovies(zip)
+    loadMovies(loc.zipcode)
   }
 
   const handleCloseModal = () => {
@@ -67,14 +71,14 @@ export default function MoviesPage() {
     <>
       {showModal && (
         <ZipCodeModal
-          onSelectZipCode={handleSelectZipCode}
+          onSelectLocation={handleSelectLocation}
           onClose={handleCloseModal}
         />
       )}
       <main className="flex-1 px-6 md:px-10 py-8 max-w-7xl mx-auto w-full">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold">
-            Movies in <span className="text-primary">{zipCode}</span>
+            Movies in <span className="text-primary">{location?.city || location?.zipcode}</span>
           </h1>
           <button
             onClick={() => setShowModal(true)}

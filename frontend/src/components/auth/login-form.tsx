@@ -4,8 +4,16 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { loginUser } from "@/lib/api"
 
+import Link from "next/link"
+import { useAuth } from "@/context/auth-context"
+
+
 export function LoginForm() {
+  
+
+
   const router = useRouter()
+  const { login: authLogin } = useAuth()
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("")
@@ -23,10 +31,11 @@ export function LoginForm() {
 
     try {
       setIsSubmitting(true)
-      await loginUser({
+      const response = await loginUser({
         email: email.trim(),
         password,
       })
+      authLogin(response.user)
       router.push("/")
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : "Failed to login")
@@ -116,17 +125,17 @@ export function LoginForm() {
 
       {/* Remember + Forgot */}
       <div className="flex items-center justify-between">
-        <label htmlFor="remember" className="flex items-center gap-2 cursor-pointer">
+        {/* <label htmlFor="remember" className="flex items-center gap-2 cursor-pointer">
           <input
             id="remember"
             type="checkbox"
             className="h-4 w-4 rounded border-muted-foreground/40 accent-primary"
           />
           <span className="text-sm text-muted-foreground">Remember me</span>
-        </label>
-        <a href="#" className="text-sm text-accent-foreground font-medium hover:opacity-80 transition-opacity" style={{ color: 'hsl(var(--accent))' }}>
+        </label> */}
+        {/* <Link href="#" className="text-sm text-accent-foreground font-medium hover:opacity-80 transition-opacity" style={{ color: 'hsl(var(--accent))' }}>
           Forgot password?
-        </a>
+        </Link> */}
       </div>
 
       {/* Submit */}
@@ -145,17 +154,17 @@ export function LoginForm() {
       ) : null}
 
       {/* Divider */}
-      <div className="relative flex items-center justify-center my-1">
+      {/* <div className="relative flex items-center justify-center my-1">
         <div className="absolute inset-0 flex items-center" aria-hidden="true">
           <div className="w-full border-t border-border" />
         </div>
         <span className="relative bg-background px-4 text-xs text-muted-foreground uppercase tracking-widest">
           or continue with
         </span>
-      </div>
+      </div> */}
 
       {/* Social */}
-      <div className="grid grid-cols-2 gap-3">
+      {/* <div className="grid grid-cols-2 gap-3">
         <button
           type="button"
           className="flex items-center justify-center gap-2 h-11 rounded-xl border border-border bg-card text-foreground text-sm font-medium hover:bg-secondary transition-colors"
@@ -177,7 +186,7 @@ export function LoginForm() {
           </svg>
           Apple
         </button>
-      </div>
+      </div> */}
     </form>
   )
 }

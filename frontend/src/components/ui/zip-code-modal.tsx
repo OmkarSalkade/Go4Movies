@@ -6,11 +6,11 @@ import { Location } from "@/lib/types"
 import { useZipCode } from "@/hooks/useZipCode"
 
 interface ZipCodeModalProps {
-  onSelectZipCode: (zipCode: string) => void
+  onSelectLocation: (location: Location) => void
   onClose: () => void
 }
 
-export function ZipCodeModal({ onSelectZipCode, onClose }: ZipCodeModalProps) {
+export function ZipCodeModal({ onSelectLocation, onClose }: ZipCodeModalProps) {
   const [input, setInput] = useState("")
   const [locations, setLocations] = useState<Location[]>([])
   const [loading, setLoading] = useState(true)
@@ -54,8 +54,8 @@ export function ZipCodeModal({ onSelectZipCode, onClose }: ZipCodeModalProps) {
     )
   }, [input, locations])
 
-  const handleSelect = (zipCode: string) => {
-    onSelectZipCode(zipCode)
+  const handleSelect = (loc: Location) => {
+    onSelectLocation(loc)
   }
 
   const getZipCodeByLocation = async (lat: number, lon: number) => {
@@ -77,8 +77,15 @@ export function ZipCodeModal({ onSelectZipCode, onClose }: ZipCodeModalProps) {
   const handleDetectLocation = async () => {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(async (position) => {
-        const zipCode = await getZipCodeByLocation(position.coords.latitude, position.coords.longitude)
-        onSelectZipCode(zipCode)
+        const detectedZip = await getZipCodeByLocation(position.coords.latitude, position.coords.longitude)
+        // Try to find a matching location from our list
+        const matched = locations.find((l) => l.zipcode === detectedZip)
+        if (matched) {
+          onSelectLocation(matched)
+        } else {
+          // Fallback: build a minimal Location object
+          onSelectLocation({ id: 0, zipcode: detectedZip, city: "", state: "", country: "" })
+        }
       })
     } else {
       alert("Geolocation is not available")
@@ -137,7 +144,7 @@ export function ZipCodeModal({ onSelectZipCode, onClose }: ZipCodeModalProps) {
                 {filteredLocations.map((loc) => (
                   <li
                     key={loc.id}
-                    onClick={() => handleSelect(loc.zipcode)}
+                    onClick={() => handleSelect(loc)}
                     className="px-4 py-3 hover:bg-surface-dark-hover cursor-pointer text-neutral-300 hover:text-white transition-colors flex justify-between items-center"
                   >
                     <div className="flex flex-col">
