@@ -254,6 +254,14 @@ func Seed() {
 		{MovieID: movies[0].ID, ScreenID: screens[6].ID, ShowDate: tomorrow, StartTime: "10:00", EndTime: "12:20", Language: "English", Format: "2D", PriceMultiplier: 1.0, IsActive: true},
 		{MovieID: movies[1].ID, ScreenID: screens[6].ID, ShowDate: tomorrow, StartTime: "14:00", EndTime: "15:47", Language: "English", Format: "2D", PriceMultiplier: 1.0, IsActive: true},
 	}
+	user := models.User{
+		Username: "Tester 1",
+		FullName: "Tester John",
+		Email:    "tester@go4movies.com",
+		Password: "Password",
+		Phone:    strPtr("999999999"),
+	}
+	DB.Create(&user)
 	DB.Create(&showtimes)
 	log.Printf("Seeded %d showtimes", len(showtimes))
 
